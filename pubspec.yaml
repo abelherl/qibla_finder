@@ -1,0 +1,70 @@
+name: qibla_finder
+description: A new Flutter project.
+
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+  # Bloc for state management
+  flutter_bloc: ^6.0.5
+  # Value equality
+  equatable: ^1.2.5
+  #Flutter Realm using Platform Channel
+  flutter_realm: ^0.2.2
+  # UUID Generator for identifier
+  uuid: ^2.2.2
+  # Service locator
+  get_it: ^5.0.0
+  # Logger by Google developers
+  logging: ^0.11.4
+  # Local cache
+  shared_preferences: ^0.5.10
+  # Functional programming
+  dartz: ^0.9.1
+  # Manage routes
+  sailor: ^0.7.1
+  # Information of application package
+  package_info: ^0.4.3
+  # Information of device
+  device_info: ^0.4.2+7
+  # Device timezone
+  flutter_native_timezone: ^1.0.4
+  # Render SVG file
+  flutter_svg: ^0.19.0
+  # Http client
+  dio: ^3.0.10
+  # Launch default browser
+  url_launcher: ^5.7.2
+  # Stay awake
+  wakelock: ^0.1.4+2
+  # Grouped List
+  grouped_list: ^3.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+#  assets:
+#    - assets/images/
+#    - assets/icons/
+#    - assets/lang/
+#
+#  fonts:
+#    - family: SF Pro
+#      fonts:
+#        - asset: assets/fonts/SF/SF-Pro-Text-Regular.otf
+#        - asset: assets/fonts/SF/SF-Pro-Text-Semibold.otf
+#          weight: 500
+#        - asset: assets/fonts/SF/SF-Pro-Text-Bold.otf
+#          weight: 700
