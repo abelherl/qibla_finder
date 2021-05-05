@@ -29,8 +29,7 @@ class App {
   Future<void> init() async {
     // set default orientation to portrait
     await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
     ]);
     // fullscreen
 //    await SystemChrome.setEnabledSystemUIOverlays([]);

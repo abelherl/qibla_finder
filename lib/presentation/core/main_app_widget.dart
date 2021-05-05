@@ -16,7 +16,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Anyfood POS',
+      title: 'Qibla Finder',
       theme: mainTheme(),
       home: SplashPage(),
       navigatorKey: App.main.router.navigatorKey,
@@ -25,11 +25,11 @@ class _MainAppState extends State<MainApp> {
         Locale('en', 'US'),
         Locale('sk', 'SK'),
       ],
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
+      // localizationsDelegates: [
+      //   AppLocalizations.delegate,
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate,
+      // ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales) {
           if (supportedLocale.languageCode == locale.languageCode &&

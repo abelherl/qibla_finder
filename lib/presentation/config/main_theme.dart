@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 ThemeData mainTheme() {
   final fontFamily = aFontFamily;
-  final primaryColor = Colors.red;
-  final accentColor = primaryColor[50];
+  final primaryColor = Color(0xFF3FC876);
+  final accentColor = Color(0xFF107BD2);
 
   TextTheme _basicTextTheme(TextTheme base) {
     return base.copyWith(

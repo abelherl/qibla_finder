@@ -48,6 +48,8 @@ dependencies:
   wakelock: ^0.1.4+2
   # Grouped List
   grouped_list: ^3.5.0
+  # Division
+  division: ^0.8.8
 
 dev_dependencies:
   flutter_test:

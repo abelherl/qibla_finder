@@ -55,7 +55,7 @@ Future<bool> showNoNetworkDialog(BuildContext context, String message) async {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    AppLocalizations.of(context).translate('offline_title'),
+                    "AppLocalizations.of(context).translate('offline_title')",
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   SizedBox(height: aPadding),
@@ -73,7 +73,7 @@ Future<bool> showNoNetworkDialog(BuildContext context, String message) async {
                       Navigator.pop(context, {'reload': true});
                     },
                     child: Text(
-                      AppLocalizations.of(context).translate('offline_reload'),
+                      "AppLocalizations.of(context).translate('offline_reload')",
                       style: Theme.of(context).textTheme.subtitle2.copyWith(
                         color: Theme.of(context).primaryColor,
                       ),
