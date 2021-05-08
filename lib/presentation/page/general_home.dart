@@ -25,7 +25,34 @@ class _HomePageState extends State<HomePage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
-        child: Center(),
+        child: SafeArea(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Dau"),
+                      Text("Malang, Indonesia")
+                    ],
+                  ),
+                  Spacer(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("29 Apr 2021"),
+                      Text("17 Ramadhan 1442H")
+                    ],
+                  ),
+                  SizedBox(width: 15),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
