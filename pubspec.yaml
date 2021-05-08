@@ -50,6 +50,8 @@ dependencies:
   grouped_list: ^3.5.0
   # Division
   division: ^0.8.8
+  # Infinity Page View
+  infinity_page_view: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -68,7 +70,7 @@ flutter:
         - asset: assets/fonts/quicksand/Quicksand-Regular.ttf
         - asset: assets/fonts/quicksand/Quicksand-Light.ttf
           weight: 300
-        - asset: assets/fonts/quicksand/Quicksand-Medium.ttf
+        - asset: assets/fonts/quicksand/Quicksand-SemiBold.ttf
           weight: 500
         - asset: assets/fonts/quicksand/Quicksand-Bold.ttf
           weight: 700

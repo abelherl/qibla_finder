@@ -36,8 +36,8 @@ ThemeData mainTheme() {
       ),
       headline6: base.headline6.copyWith(
         fontFamily: fontFamily,
-        fontWeight: FontWeight.w700,
-        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        fontSize: 20,
         color: Colors.white,
       ),
       bodyText1: base.bodyText1.copyWith(
