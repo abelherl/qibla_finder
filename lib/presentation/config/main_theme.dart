@@ -2,7 +2,7 @@ import 'package:qibla_finder/shared/constant_styling.dart';
 import 'package:flutter/material.dart';
 
 ThemeData mainTheme() {
-  final fontFamily = aFontFamily;
+  final fontFamily = 'Quicksand';
   final primaryColor = Color(0xFF3FC876);
   final accentColor = Color(0xFF107BD2);
 

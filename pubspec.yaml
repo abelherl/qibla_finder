@@ -62,11 +62,13 @@ flutter:
     - assets/icons/SVG/
 #    - assets/lang/
 #
-#  fonts:
-#    - family: SF Pro
-#      fonts:
-#        - asset: assets/fonts/SF/SF-Pro-Text-Regular.otf
-#        - asset: assets/fonts/SF/SF-Pro-Text-Semibold.otf
-#          weight: 500
-#        - asset: assets/fonts/SF/SF-Pro-Text-Bold.otf
-#          weight: 700
+  fonts:
+    - family: Quicksand
+      fonts:
+        - asset: assets/fonts/quicksand/Quicksand-Regular.ttf
+        - asset: assets/fonts/quicksand/Quicksand-Light.ttf
+          weight: 300
+        - asset: assets/fonts/quicksand/Quicksand-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/quicksand/Quicksand-Bold.ttf
+          weight: 700
