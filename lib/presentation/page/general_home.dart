@@ -3,7 +3,13 @@ import 'dart:math';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hijri/hijri_calendar.dart';
+import 'package:intl/intl.dart';
+import 'package:qibla_finder/presentation/config/args/general_args.dart';
 import 'package:qibla_finder/presentation/config/main_theme.dart';
+import 'package:qibla_finder/presentation/config/route_config.dart';
+import 'package:qibla_finder/presentation/core/app.dart';
+import 'package:sailor/sailor.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -17,6 +23,8 @@ class _HomePageState extends State<HomePage> {
   int _currentPage = 0;
   double _fraction = 0.35;
   double _pageOffset = 0;
+  List<String> _names = ["Fajr", "Dzuhr", "Ashr", "Maghrib", "Isya"];
+  List<String> _times = ["04:15", "11:31", "14:51", "17:23", "18:34"];
 
   @override
   void initState() {
@@ -75,10 +83,12 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "29 Apr 2021",
+                            DateFormat('dd MMM yyyy').format(DateTime.now()),
                             style: Theme.of(context).textTheme.headline5,
                           ),
-                          Text("17 Ramadhan 1442 H"),
+                          Text(
+                            HijriCalendar.now().toFormat("dd MMMM yyyy"),
+                          ),
                         ],
                       ),
                     ),
@@ -106,8 +116,8 @@ class _HomePageState extends State<HomePage> {
                     return PrayerTime(
                       scale: scale,
                       activated: true,
-                      title: "Ashr",
-                      time: "11:31",
+                      title: _names[position],
+                      time: _times[position],
                       opacity: opacity,
                       alignment: Alignment.bottomCenter,
                       pageController: _pageController,
@@ -115,18 +125,28 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   controller: _pageController,
-                  itemCount: 5,
+                  itemCount: _names.length,
                 ),
               ),
               Container(
                 transform: Matrix4.translationValues(0, -30, 0),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white24,
-                  child: Icon(
-                    Icons.settings,
-                    color: Colors.white,
+                child: TextButton(
+                  onPressed: () => App.main.router.navigate(
+                    RouteName.generalSettings,
+                    transitionCurve: Curves.easeInOutQuart,
+                    transitionDuration: Duration(milliseconds: 800),
+                    transitions: [SailorTransition.fade_in],
+                    args: SettingsArgs(_names, _times),
                   ),
-                ),
+                  child: Icon(Icons.settings_outlined),
+                  style: TextButton.styleFrom(
+                    shape: CircleBorder(),
+                    padding: EdgeInsets.all(8),
+                    primary: Colors.white,
+                    backgroundColor: Colors.white24,
+                    elevation: 0,
+                  ),
+                )
               ),
               // RotatedBox(
               //   quarterTurns: 1,
