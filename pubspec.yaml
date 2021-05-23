@@ -52,6 +52,10 @@ dependencies:
   division: ^0.8.8
   # Infinity Page View
   infinity_page_view: ^1.0.0
+  # Hijri DateTime
+  hijri: ^2.0.3
+  # Switch
+  flutter_switch: ^0.2.2
 
 dev_dependencies:
   flutter_test:
