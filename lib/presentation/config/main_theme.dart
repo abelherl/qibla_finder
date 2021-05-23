@@ -37,7 +37,7 @@ ThemeData mainTheme() {
       headline6: base.headline6.copyWith(
         fontFamily: fontFamily,
         fontWeight: FontWeight.w600,
-        fontSize: 20,
+        fontSize: 18,
         color: Colors.white,
       ),
       bodyText1: base.bodyText1.copyWith(
@@ -50,12 +50,12 @@ ThemeData mainTheme() {
       ),
       subtitle1: base.subtitle1.copyWith(
         fontFamily: fontFamily,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
         color: Colors.white,
       ),
       subtitle2: base.subtitle2.copyWith(
         fontFamily: fontFamily,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
         color: Colors.white,
       ),
       button: base.subtitle2.copyWith(
