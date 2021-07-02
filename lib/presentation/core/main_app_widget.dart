@@ -35,7 +35,7 @@ class _MainAppState extends State<MainApp> {
         // ],
         localeResolutionCallback: (locale, supportedLocales) {
           for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale.languageCode &&
+            if (supportedLocale.languageCode == locale!.languageCode &&
                 supportedLocale.countryCode == locale.countryCode) {
               return supportedLocale;
             }

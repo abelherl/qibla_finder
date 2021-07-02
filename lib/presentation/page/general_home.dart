@@ -2,9 +2,13 @@ import 'dart:math';
 
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_qiblah/flutter_qiblah.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart' as Locs;
 import 'package:qibla_finder/presentation/config/args/general_args.dart';
 import 'package:qibla_finder/presentation/config/main_theme.dart';
 import 'package:qibla_finder/presentation/config/route_config.dart';
@@ -12,7 +16,7 @@ import 'package:qibla_finder/presentation/core/app.dart';
 import 'package:sailor/sailor.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,10 +25,58 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   PageController _pageController = PageController();
   int _currentPage = 0;
-  double _fraction = 0.35;
+  final double _fraction = 0.35;
+  late QiblahDirection qiblahDirection;
+  bool _loaded = false;
   double _pageOffset = 0;
   List<String> _names = ["Fajr", "Dzuhr", "Ashr", "Maghrib", "Isya"];
   List<String> _times = ["04:15", "11:31", "14:51", "17:23", "18:34"];
+  late Placemark _address;
+  final _needleSvg = SvgPicture.asset(
+    'assets/icons/SVG/direction.svg',
+    fit: BoxFit.contain,
+    height: 300,
+    alignment: Alignment.center,
+  );
+
+  Future<void> getLocationData() async {
+    Locs.Location location = new Locs.Location();
+
+    bool _serviceEnabled;
+    Locs.PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == Locs.PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != Locs.PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    final Locs.LocationData locationData = await location.getLocation();
+
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        locationData.latitude!,
+        locationData.longitude!,
+      );
+
+      _address = placemarks.first;
+      _loaded = true;
+
+      setState(() {});
+    }catch(err){}
+
+    // print("ADDRESS TEST: ${address.locality} : ${address.subAdministrativeArea} : ${address.country}");
+  }
 
   @override
   void initState() {
@@ -34,10 +86,12 @@ class _HomePageState extends State<HomePage> {
         PageController(initialPage: 0, viewportFraction: _fraction)
           ..addListener(() {
             setState(() {
-              _pageOffset = _pageController.page;
+              _pageOffset = _pageController.page!;
               // print(pageOffset);
             });
           });
+
+    getLocationData();
   }
 
   @override
@@ -55,7 +109,7 @@ class _HomePageState extends State<HomePage> {
             end: Alignment.bottomCenter,
           ),
         child: SafeArea(
-          child: Column(
+          child: _loaded ? Column(
             children: [
               SizedBox(height: 20),
               Padding(
@@ -70,10 +124,10 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Dau",
+                            "${_address.locality}",
                             style: Theme.of(context).textTheme.headline5,
                           ),
-                          Text("Malang, Indonesia"),
+                          Text("${_address.subAdministrativeArea}, ${_address.country}"),
                         ],
                       ),
                     ),
@@ -94,6 +148,22 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+              ),
+              Spacer(),
+              StreamBuilder(
+                stream: FlutterQiblah.qiblahStream,
+                builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Container();
+
+                  qiblahDirection = snapshot.data!;
+
+                  return Transform.rotate(
+                    angle: ((qiblahDirection.qiblah) * (pi / 180) * -1),
+                    alignment: Alignment.center,
+                    child: _needleSvg,
+                  );
+                },
               ),
               Spacer(),
               // Icon(
@@ -171,7 +241,7 @@ class _HomePageState extends State<HomePage> {
               //   ),
               // ),
             ],
-          ),
+          ) : SpinKitFadingFour(color: Colors.white),
         ),
       ),
     );
@@ -180,15 +250,15 @@ class _HomePageState extends State<HomePage> {
 
 class PrayerTime extends StatefulWidget {
   const PrayerTime({
-    Key key,
-    @required this.scale,
-    @required this.title,
-    @required this.time,
-    @required this.activated,
-    @required this.opacity,
-    @required this.alignment,
-    @required this.pageController,
-    @required this.offset,
+    Key? key,
+    required this.scale,
+    required this.title,
+    required this.time,
+    required this.activated,
+    required this.opacity,
+    required this.alignment,
+    required this.pageController,
+    required this.offset,
   }) : super(key: key);
 
   final double scale;
@@ -223,10 +293,10 @@ class _PrayerTimeState extends State<PrayerTime> {
               color: Colors.white,
               size: 18,
             ),
-            FlatButton(
+            TextButton(
               onPressed: () {
                 if (widget.offset != widget.pageController.page) {
-                  if (widget.offset < widget.pageController.page) {
+                  if (widget.offset < widget.pageController.page!) {
                     widget.pageController.previousPage(
                         duration: Duration(milliseconds: 100),
                         curve: Curves.easeInOutQuad);
@@ -237,8 +307,6 @@ class _PrayerTimeState extends State<PrayerTime> {
                   }
                 }
               },
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
               child: Column(
                 children: [
                   Text(

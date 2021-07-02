@@ -16,11 +16,11 @@ class App {
   final Sailor router;
 
   /// Local device data
-  LocalDevice device;
+  LocalDevice? device;
 
   App({
-    @required this.flavor,
-    @required this.router,
+    required this.flavor,
+    required this.router,
   });
 
   /// Helper to get main App instance, one and only

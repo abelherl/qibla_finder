@@ -16,36 +16,36 @@ class LocalDevice extends Equatable {
   ///
   /// Which means, each installed apps has unique identifier. This is useful
   /// to track whether a user has logged in in a new device or not.
-  final String identifier;
+  final Object identifier;
 
   /// Device name
-  final String name;
+  final String? name;
 
   /// Loaded from current app version
-  final String appVersion;
+  final String? appVersion;
 
   /// Loaded from current app build number
-  final String buildNumber;
+  final String? buildNumber;
 
   /// Alternatively filled with device location.
-  final double latitude;
+  final double? latitude;
 
   /// Alternatively filled with device location.
-  final double longitude;
+  final double? longitude;
 
   /// Loaded from os type
   /// See [OSType] for available const
-  final String osType;
+  final String? osType;
 
   /// Loaded from os version
-  final String osVersion;
+  final String? osVersion;
 
   /// Loaded from device timezone
-  final String timezone;
+  final String? timezone;
 
   /// Disable using this class without initializing identifier
   LocalDevice._({
-    @required this.identifier,
+    required this.identifier,
     this.name,
     this.appVersion,
     this.buildNumber,
@@ -65,14 +65,14 @@ class LocalDevice extends Equatable {
 
   // Copy the data
   LocalDevice copyWith({
-    String name,
-    String appVersion,
-    String buildNumber,
-    double latitude,
-    double longitude,
-    String osType,
-    String osVersion,
-    String timezone,
+    String? name,
+    String? appVersion,
+    String? buildNumber,
+    double? latitude,
+    double? longitude,
+    String? osType,
+    String? osVersion,
+    String? timezone,
   }) {
     return LocalDevice._(
       identifier: identifier,

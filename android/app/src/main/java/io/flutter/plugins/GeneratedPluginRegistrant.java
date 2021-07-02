@@ -16,11 +16,16 @@ public final class GeneratedPluginRegistrant {
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
     flutterEngine.getPlugins().add(new io.flutter.plugins.deviceinfo.DeviceInfoPlugin());
+      com.hemanthraj.fluttercompass.FlutterCompassPlugin.registerWith(shimPluginRegistry.registrarFor("com.hemanthraj.fluttercompass.FlutterCompassPlugin"));
       com.whelksoft.flutter_native_timezone.FlutterNativeTimezonePlugin.registerWith(shimPluginRegistry.registrarFor("com.whelksoft.flutter_native_timezone.FlutterNativeTimezonePlugin"));
-      com.it_nomads.flutter_realm.FlutterRealmPlugin.registerWith(shimPluginRegistry.registrarFor("com.it_nomads.flutter_realm.FlutterRealmPlugin"));
+    flutterEngine.getPlugins().add(new io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin());
+    flutterEngine.getPlugins().add(new ml.medyas.flutter_qiblah.FlutterQiblahPlugin());
+    flutterEngine.getPlugins().add(new com.baseflow.geocoding.GeocodingPlugin());
+    flutterEngine.getPlugins().add(new com.baseflow.geolocator.GeolocatorPlugin());
+    flutterEngine.getPlugins().add(new io.flutter.plugins.googlemaps.GoogleMapsPlugin());
+    flutterEngine.getPlugins().add(new com.lyokone.location.LocationPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.packageinfo.PackageInfoPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());
-    flutterEngine.getPlugins().add(new io.flutter.plugins.urllauncher.UrlLauncherPlugin());
     flutterEngine.getPlugins().add(new creativecreatorormaybenot.wakelock.WakelockPlugin());
   }
 }

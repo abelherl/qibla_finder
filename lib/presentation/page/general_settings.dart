@@ -7,15 +7,15 @@ import 'package:qibla_finder/presentation/core/app.dart';
 import 'package:sailor/sailor.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key key}) : super(key: key);
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  List<String> _names;
-  List<String> _times;
+  late List<String> _names;
+  late List<String> _times;
   bool _24hour = true;
 
   @override
