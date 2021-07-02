@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="355px" height="384px" viewBox="0 0 355 384" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>direction</title>
+    <defs>
+        <filter x="-20.9%" y="-14.3%" width="141.7%" height="128.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="6" dy="6" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="6.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.248456622 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <path d="M20.4988637,84.6303599 L74.9988637,39.201563 L74.9988637,187.495514 C74.9988637,194.39799 80.5988637,200 87.4988637,200 C94.3988637,200 99.9988637,194.39799 99.9988637,187.495514 L99.9988637,39.201563 L154.498864,84.6303599 C159.811364,89.0569479 167.686364,88.3316877 172.098864,83.0297857 C176.523864,77.7278837 175.811364,69.8375532 170.498864,65.4234697 L95.4988637,2.90104071 C94.9113637,2.40086127 94.2113637,2.16327604 93.5613637,1.78814147 C93.0488637,1.48803381 92.5988637,1.13790821 92.0363637,0.912827463 C90.5738637,0.337621117 89.0488637,0 87.4988637,0 C85.9488637,0 84.4238637,0.337621117 82.9613637,0.912827463 C82.3988637,1.13790821 81.9488637,1.48803381 81.4363637,1.78814147 C80.7863637,2.16327604 80.0863637,2.40086127 79.4988637,2.90104071 L4.49886366,65.4234697 C-0.801136342,69.8375532 -1.52613634,77.7278837 2.89886366,83.0297857 C7.32386366,88.3316877 15.1988637,89.0569479 20.4988637,84.6303599 Z" id="path-2"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="home" transform="translate(-29.000000, -128.000000)">
+            <g id="direction" filter="url(#filter-1)" transform="translate(206.500900, 320.000000) rotate(-330.000000) translate(-206.500900, -320.000000) translate(119.000000, 192.000000)">
+                <g id="arrow-up" transform="translate(87.500900, 156.000000) rotate(-360.000000) translate(-87.500900, -156.000000) translate(0.000000, 56.000000)">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <use id="🎨-Icon-Сolor" fill="#FFFFFF" fill-rule="nonzero" xlink:href="#path-2"></use>
+                </g>
+                <path d="M101.099785,0.000966356482 C102.930895,2.66197795 104,5.86926303 104,9.32152833 C104,18.5327939 96.3888407,26 87,26 C77.6111593,26 70,18.5327939 70,9.32152833 C70,5.86926303 71.0691054,2.66197795 72.9002146,0.000966356482 C75.9548345,4.44049207 81.1299775,7.35935519 87,7.35935519 C92.786146,7.35935519 97.8971288,4.52331111 100.967549,0.190798265 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>
