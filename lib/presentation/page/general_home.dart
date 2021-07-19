@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:adhan/adhan.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
@@ -29,8 +30,8 @@ class _HomePageState extends State<HomePage> {
   late QiblahDirection qiblahDirection;
   bool _loaded = false;
   double _pageOffset = 0;
-  List<String> _names = ["Fajr", "Dzuhr", "Ashr", "Maghrib", "Isya"];
-  List<String> _times = ["04:15", "11:31", "14:51", "17:23", "18:34"];
+  List<String> _names = ["Fajr", "Sunrise", "Dzuhr", "Ashr", "Maghrib", "Isya"];
+  List<String> _times = ["04:15", "05:35", "11:31", "14:51", "17:23", "18:34"];
   late Placemark _address;
   final _needleSvg = SvgPicture.asset(
     'assets/icons/SVG/direction.svg',
@@ -39,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     alignment: Alignment.center,
   );
 
-  Future<void> getLocationData() async {
+  Future<void> _init() async {
     Locs.Location location = new Locs.Location();
 
     bool _serviceEnabled;
@@ -72,10 +73,42 @@ class _HomePageState extends State<HomePage> {
       _address = placemarks.first;
       _loaded = true;
 
+      final myCoordinates = Coordinates(locationData.latitude!, locationData.longitude!);
+      final params = CalculationMethod.muslim_world_league.getParameters();
+      params.madhab = Madhab.hanafi;
+      final prayerTimes = PrayerTimes.today(myCoordinates, params);
+
+      _times = [];
+
+      for (int i = 0; i < 6; i++) {
+        switch (i) {
+          case 0:
+            _times.add("${DateFormat.jm().format(prayerTimes.fajr)}");
+            break;
+          case 1:
+            _times.add("${DateFormat.jm().format(prayerTimes.sunrise)}");
+            break;
+          case 2:
+            _times.add("${DateFormat.jm().format(prayerTimes.dhuhr)}");
+            break;
+          case 3:
+            _times.add("${DateFormat.jm().format(prayerTimes.asr)}");
+            break;
+          case 4:
+            _times.add("${DateFormat.jm().format(prayerTimes.maghrib)}");
+            break;
+          default:
+            _times.add("${DateFormat.jm().format(prayerTimes.isha)}");
+            break;
+        }
+      }
+
+      // print("---Today's Prayer Times in Your Local Timezone(${_prayerTimes.fajr.timeZoneName})---");
+      // print(DateFormat.jm().format(_prayerTimes.fajr));
+      // print("ADDRESS TEST: ${address.locality} : ${address.subAdministrativeArea} : ${address.country}");
+
       setState(() {});
     } catch (err) {}
-
-    // print("ADDRESS TEST: ${address.locality} : ${address.subAdministrativeArea} : ${address.country}");
   }
 
   @override
@@ -91,7 +124,7 @@ class _HomePageState extends State<HomePage> {
             });
           });
 
-    getLocationData();
+    _init();
   }
 
   @override
@@ -127,53 +160,53 @@ class _HomePageState extends State<HomePage> {
                   child: SpinKitFadingFour(color: Colors.white),
                 ),
               ),
-              Column(
-                children: [
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                !_loaded ? "" : "${_address.locality}",
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
-                              Text(
-                                !_loaded ? "" : "${_address.subAdministrativeArea}, ${_address.country}"),
-                            ],
+              AnimatedOpacity(
+                opacity: _loaded ? 1 : 0,
+                duration: Duration(milliseconds: 1200),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  !_loaded ? "" : "${_address.locality}",
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                Text(
+                                  !_loaded ? "" : "${_address.subAdministrativeArea}, ${_address.country}"),
+                              ],
+                            ),
                           ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                DateFormat('dd MMM yyyy')
-                                    .format(DateTime.now()),
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
-                              Text(
-                                HijriCalendar.now().toFormat("dd MMMM yyyy"),
-                              ),
-                            ],
+                          Flexible(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  DateFormat('dd MMM yyyy')
+                                      .format(DateTime.now()),
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                Text(
+                                  HijriCalendar.now().toFormat("dd MMMM yyyy"),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  AnimatedOpacity(
-                    opacity: _loaded ? 1 : 0,
-                    duration: Duration(milliseconds: 800),
-                    child: StreamBuilder(
+                    Spacer(),
+                    StreamBuilder(
                       stream: FlutterQiblah.qiblahStream,
                       builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting)
@@ -182,93 +215,93 @@ class _HomePageState extends State<HomePage> {
                         qiblahDirection = snapshot.data!;
 
                         return Transform.rotate(
-                          angle: ((qiblahDirection.qiblah) * (pi / 180) * -1),
+                          angle: ((qiblahDirection.qiblah+30) * (pi / 180) * -1),
                           alignment: Alignment.center,
                           child: _needleSvg,
                         );
                       },
                     ),
-                  ),
-                  Spacer(),
-                  Text(
-                    "Please position your phone\nas flat as possible for best result",
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 5),
-                  // Icon(
-                  //   _currentPage == 2 ? Icons.notifications_off_outlined : Icons.notifications_none,
-                  //   color: Colors.white,
-                  // ),
-                  Container(
-                    height: 155,
-                    child: PageView.builder(
-                      physics: BouncingScrollPhysics(),
-                      onPageChanged: (page) {
-                        _currentPage = page;
-                      },
-                      itemBuilder: (context, position) {
-                        double scale = max(1.2,
-                            1 - (_pageOffset - position).abs() + _fraction);
-                        double opacity = max(0.4,
-                            0.6 - (_pageOffset - position).abs() + _fraction);
-
-                        return PrayerTime(
-                          scale: scale,
-                          activated: true,
-                          title: _names[position],
-                          time: _times[position],
-                          opacity: opacity,
-                          alignment: Alignment.bottomCenter,
-                          pageController: _pageController,
-                          offset: position,
-                        );
-                      },
-                      controller: _pageController,
-                      itemCount: _names.length,
+                    Spacer(),
+                    Text(
+                      "Please position your phone\nas flat as possible for best result",
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  Container(
-                      transform: Matrix4.translationValues(0, -30, 0),
-                      child: TextButton(
-                        onPressed: () => App.main.router.navigate(
-                          RouteName.generalSettings,
-                          transitionCurve: Curves.easeInOutQuart,
-                          transitionDuration: Duration(milliseconds: 800),
-                          transitions: [SailorTransition.fade_in],
-                          args: SettingsArgs(_names, _times),
-                        ),
-                        child: Icon(Icons.settings_outlined),
-                        style: TextButton.styleFrom(
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(8),
-                          primary: Colors.white,
-                          backgroundColor: Colors.white24,
-                          elevation: 0,
-                        ),
-                      )),
-                  // RotatedBox(
-                  //   quarterTurns: 1,
-                  //   child: Container(
-                  //     height: 250,
-                  //     width: MediaQuery.of(context).size.width,
-                  //     child: ListWheelScrollView(
-                  //       itemExtent: 70,
-                  //       offAxisFraction: _fraction,
-                  //       physics: BouncingScrollPhysics(),
-                  //       children: List.generate(5, (_) {
-                  //         return PrayerTime(
-                  //           scale: 1,
-                  //           activated: true,
-                  //           title: "Ashr",
-                  //           time: "11:31",
-                  //           opacity: 1,
-                  //           alignment: Alignment.bottomCenter,
-                  //         );
-                  //       }),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                    SizedBox(height: 5),
+                    // Icon(
+                    //   _currentPage == 2 ? Icons.notifications_off_outlined : Icons.notifications_none,
+                    //   color: Colors.white,
+                    // ),
+                    Container(
+                      height: 155,
+                      child: PageView.builder(
+                        physics: BouncingScrollPhysics(),
+                        onPageChanged: (page) {
+                          _currentPage = page;
+                        },
+                        itemBuilder: (context, position) {
+                          double scale = max(1.2,
+                              1 - (_pageOffset - position).abs() + _fraction);
+                          double opacity = max(0.4,
+                              0.6 - (_pageOffset - position).abs() + _fraction);
+
+                          return PrayerTime(
+                            scale: scale,
+                            activated: true,
+                            title: _names[position],
+                            time: _times[position],
+                            opacity: opacity,
+                            alignment: Alignment.bottomCenter,
+                            pageController: _pageController,
+                            offset: position,
+                          );
+                        },
+                        controller: _pageController,
+                        itemCount: _names.length,
+                      ),
+                    ),
+                    Container(
+                        transform: Matrix4.translationValues(0, -30, 0),
+                        child: TextButton(
+                          onPressed: () => App.main.router.navigate(
+                            RouteName.generalSettings,
+                            transitionCurve: Curves.easeInOutQuart,
+                            transitionDuration: Duration(milliseconds: 800),
+                            transitions: [SailorTransition.fade_in],
+                            args: SettingsArgs(_names, _times),
+                          ),
+                          child: Icon(Icons.settings_outlined),
+                          style: TextButton.styleFrom(
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(8),
+                            primary: Colors.white,
+                            backgroundColor: Colors.white24,
+                            elevation: 0,
+                          ),
+                        )),
+                    // RotatedBox(
+                    //   quarterTurns: 1,
+                    //   child: Container(
+                    //     height: 250,
+                    //     width: MediaQuery.of(context).size.width,
+                    //     child: ListWheelScrollView(
+                    //       itemExtent: 70,
+                    //       offAxisFraction: _fraction,
+                    //       physics: BouncingScrollPhysics(),
+                    //       children: List.generate(5, (_) {
+                    //         return PrayerTime(
+                    //           scale: 1,
+                    //           activated: true,
+                    //           title: "Ashr",
+                    //           time: "11:31",
+                    //           opacity: 1,
+                    //           alignment: Alignment.bottomCenter,
+                    //         );
+                    //       }),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             ],
           ),
