@@ -6,7 +6,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -18,16 +18,14 @@ dependencies:
   flutter_bloc: ^6.0.5
   # Value equality
   equatable: ^1.2.5
-  #Flutter Realm using Platform Channel
-  flutter_realm: ^0.2.2
   # UUID Generator for identifier
-  uuid: ^2.2.2
+  uuid: ^3.0.4
   # Service locator
   get_it: ^5.0.0
   # Logger by Google developers
   logging: ^0.11.4
   # Local cache
-  shared_preferences: ^0.5.10
+  shared_preferences: ^2.0.0
   # Functional programming
   dartz: ^0.9.1
   # Manage routes
@@ -35,15 +33,13 @@ dependencies:
   # Information of application package
   package_info: ^0.4.3
   # Information of device
-  device_info: ^0.4.2+7
+  device_info: ^2.0.2
   # Device timezone
   flutter_native_timezone: ^1.0.4
   # Render SVG file
-  flutter_svg: ^0.19.0
+  flutter_svg: ^0.20.0-nullsafety.3
   # Http client
-  dio: ^3.0.10
-  # Launch default browser
-  url_launcher: ^5.7.2
+  dio: ^4.0.0
   # Stay awake
   wakelock: ^0.1.4+2
   # Grouped List
@@ -52,16 +48,44 @@ dependencies:
   division: ^0.8.8
   # Infinity Page View
   infinity_page_view: ^1.0.0
+  # Hijri DateTime
+  hijri: ^2.0.3
+  # Switch
+  flutter_switch: ^0.2.2
+  # App Icon
+  flutter_launcher_icons: ^0.9.0
+  # Geolocator
+  geolocator: ^7.0.1
+  # Google Maps
+  google_maps_flutter: ^2.0.1
+  # Flutter Qiblah
+  flutter_qiblah: 2.0.1
+  # Location
+  location: ^4.3.0
+  # Geocoder
+  geocoding: ^2.0.0
+  # Spin Kit
+  flutter_spinkit: ^5.0.0
+  # Adhan Time
+  adhan: ^2.0.0-nullsafety.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_launcher_icons: "^0.9.0"
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/appicon.png"
 
 flutter:
   uses-material-design: true
   assets:
 #    - assets/images/
     - assets/icons/SVG/
+    - assets/icons/
 #    - assets/lang/
 #
   fonts:

@@ -6,6 +6,7 @@ class RouteName {
   // General routes
   static const String generalSplash = '/';
   static const String generalHome="/home";
+  static const String generalSettings="/settings";
 }
 
 class RouteConfig {

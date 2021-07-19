@@ -1,12 +1,23 @@
 import 'dart:math';
 
+import 'package:adhan/adhan.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_qiblah/flutter_qiblah.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:hijri/hijri_calendar.dart';
+import 'package:intl/intl.dart';
+import 'package:location/location.dart' as Locs;
+import 'package:qibla_finder/presentation/config/args/general_args.dart';
 import 'package:qibla_finder/presentation/config/main_theme.dart';
+import 'package:qibla_finder/presentation/config/route_config.dart';
+import 'package:qibla_finder/presentation/core/app.dart';
+import 'package:sailor/sailor.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -15,8 +26,90 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   PageController _pageController = PageController();
   int _currentPage = 0;
-  double _fraction = 0.35;
+  final double _fraction = 0.35;
+  late QiblahDirection qiblahDirection;
+  bool _loaded = false;
   double _pageOffset = 0;
+  List<String> _names = ["Fajr", "Sunrise", "Dzuhr", "Ashr", "Maghrib", "Isya"];
+  List<String> _times = ["04:15", "05:35", "11:31", "14:51", "17:23", "18:34"];
+  late Placemark _address;
+  final _needleSvg = SvgPicture.asset(
+    'assets/icons/SVG/direction.svg',
+    fit: BoxFit.contain,
+    height: 300,
+    alignment: Alignment.center,
+  );
+
+  Future<void> _init() async {
+    Locs.Location location = new Locs.Location();
+
+    bool _serviceEnabled;
+    Locs.PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == Locs.PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != Locs.PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    final Locs.LocationData locationData = await location.getLocation();
+
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        locationData.latitude!,
+        locationData.longitude!,
+      );
+
+      _address = placemarks.first;
+      _loaded = true;
+
+      final myCoordinates = Coordinates(locationData.latitude!, locationData.longitude!);
+      final params = CalculationMethod.muslim_world_league.getParameters();
+      params.madhab = Madhab.hanafi;
+      final prayerTimes = PrayerTimes.today(myCoordinates, params);
+
+      _times = [];
+
+      for (int i = 0; i < 6; i++) {
+        switch (i) {
+          case 0:
+            _times.add("${DateFormat.jm().format(prayerTimes.fajr)}");
+            break;
+          case 1:
+            _times.add("${DateFormat.jm().format(prayerTimes.sunrise)}");
+            break;
+          case 2:
+            _times.add("${DateFormat.jm().format(prayerTimes.dhuhr)}");
+            break;
+          case 3:
+            _times.add("${DateFormat.jm().format(prayerTimes.asr)}");
+            break;
+          case 4:
+            _times.add("${DateFormat.jm().format(prayerTimes.maghrib)}");
+            break;
+          default:
+            _times.add("${DateFormat.jm().format(prayerTimes.isha)}");
+            break;
+        }
+      }
+
+      // print("---Today's Prayer Times in Your Local Timezone(${_prayerTimes.fajr.timeZoneName})---");
+      // print(DateFormat.jm().format(_prayerTimes.fajr));
+      // print("ADDRESS TEST: ${address.locality} : ${address.subAdministrativeArea} : ${address.country}");
+
+      setState(() {});
+    } catch (err) {}
+  }
 
   @override
   void initState() {
@@ -26,10 +119,12 @@ class _HomePageState extends State<HomePage> {
         PageController(initialPage: 0, viewportFraction: _fraction)
           ..addListener(() {
             setState(() {
-              _pageOffset = _pageController.page;
+              _pageOffset = _pageController.page!;
               // print(pageOffset);
             });
           });
+
+    _init();
   }
 
   @override
@@ -40,116 +135,174 @@ class _HomePageState extends State<HomePage> {
         style: ParentStyle()
           ..linearGradient(
             colors: [
-              mainTheme().primaryColor.withAlpha(100),
-              mainTheme().accentColor.withAlpha(120)
+              mainTheme().primaryColor.withAlpha(_loaded ? 100 : 0),
+              mainTheme().accentColor.withAlpha(_loaded ? 120 : 0),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         child: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              SizedBox(height: 20),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              AnimatedOpacity(
+                opacity: _loaded ? 0 : 1,
+                duration: Duration(milliseconds: 800),
+                child: Parent(
+                  style: ParentStyle()
+                    ..linearGradient(
+                      colors: [
+                        mainTheme().primaryColor.withAlpha(100),
+                        mainTheme().accentColor.withAlpha(120)
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  child: SpinKitFadingFour(color: Colors.white),
+                ),
+              ),
+              AnimatedOpacity(
+                opacity: _loaded ? 1 : 0,
+                duration: Duration(milliseconds: 1200),
+                child: Column(
                   children: [
-                    Flexible(
-                      flex: 1,
-                      child: Column(
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Dau",
-                            style: Theme.of(context).textTheme.headline5,
+                          Flexible(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  !_loaded ? "" : "${_address.locality}",
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                Text(
+                                  !_loaded ? "" : "${_address.subAdministrativeArea}, ${_address.country}"),
+                              ],
+                            ),
                           ),
-                          Text("Malang, Indonesia"),
+                          Flexible(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  DateFormat('dd MMM yyyy')
+                                      .format(DateTime.now()),
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                Text(
+                                  HijriCalendar.now().toFormat("dd MMMM yyyy"),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    Flexible(
-                      flex: 1,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            "29 Apr 2021",
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
-                          Text("17 Ramadhan 1442 H"),
-                        ],
+                    Spacer(),
+                    StreamBuilder(
+                      stream: FlutterQiblah.qiblahStream,
+                      builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Container();
+
+                        qiblahDirection = snapshot.data!;
+
+                        return Transform.rotate(
+                          angle: ((qiblahDirection.qiblah+30) * (pi / 180) * -1),
+                          alignment: Alignment.center,
+                          child: _needleSvg,
+                        );
+                      },
+                    ),
+                    Spacer(),
+                    Text(
+                      "Please position your phone\nas flat as possible for best result",
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 5),
+                    // Icon(
+                    //   _currentPage == 2 ? Icons.notifications_off_outlined : Icons.notifications_none,
+                    //   color: Colors.white,
+                    // ),
+                    Container(
+                      height: 155,
+                      child: PageView.builder(
+                        physics: BouncingScrollPhysics(),
+                        onPageChanged: (page) {
+                          _currentPage = page;
+                        },
+                        itemBuilder: (context, position) {
+                          double scale = max(1.2,
+                              1 - (_pageOffset - position).abs() + _fraction);
+                          double opacity = max(0.4,
+                              0.6 - (_pageOffset - position).abs() + _fraction);
+
+                          return PrayerTime(
+                            scale: scale,
+                            activated: true,
+                            title: _names[position],
+                            time: _times[position],
+                            opacity: opacity,
+                            alignment: Alignment.bottomCenter,
+                            pageController: _pageController,
+                            offset: position,
+                          );
+                        },
+                        controller: _pageController,
+                        itemCount: _names.length,
                       ),
                     ),
+                    Container(
+                        transform: Matrix4.translationValues(0, -30, 0),
+                        child: TextButton(
+                          onPressed: () => App.main.router.navigate(
+                            RouteName.generalSettings,
+                            transitionCurve: Curves.easeInOutQuart,
+                            transitionDuration: Duration(milliseconds: 800),
+                            transitions: [SailorTransition.fade_in],
+                            args: SettingsArgs(_names, _times),
+                          ),
+                          child: Icon(Icons.settings_outlined),
+                          style: TextButton.styleFrom(
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(8),
+                            primary: Colors.white,
+                            backgroundColor: Colors.white24,
+                            elevation: 0,
+                          ),
+                        )),
+                    // RotatedBox(
+                    //   quarterTurns: 1,
+                    //   child: Container(
+                    //     height: 250,
+                    //     width: MediaQuery.of(context).size.width,
+                    //     child: ListWheelScrollView(
+                    //       itemExtent: 70,
+                    //       offAxisFraction: _fraction,
+                    //       physics: BouncingScrollPhysics(),
+                    //       children: List.generate(5, (_) {
+                    //         return PrayerTime(
+                    //           scale: 1,
+                    //           activated: true,
+                    //           title: "Ashr",
+                    //           time: "11:31",
+                    //           opacity: 1,
+                    //           alignment: Alignment.bottomCenter,
+                    //         );
+                    //       }),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
-              Spacer(),
-              // Icon(
-              //   _currentPage == 2 ? Icons.notifications_off_outlined : Icons.notifications_none,
-              //   color: Colors.white,
-              // ),
-              Container(
-                height: 155,
-                child: PageView.builder(
-                  physics: BouncingScrollPhysics(),
-                  onPageChanged: (page) {
-                    _currentPage = page;
-                  },
-                  itemBuilder: (context, position) {
-                    double scale = max(
-                        1.2, 1 - (_pageOffset - position).abs() + _fraction);
-                    double opacity = max(
-                        0.4, 0.6 - (_pageOffset - position).abs() + _fraction);
-
-                    return PrayerTime(
-                      scale: scale,
-                      activated: true,
-                      title: "Ashr",
-                      time: "11:31",
-                      opacity: opacity,
-                      alignment: Alignment.bottomCenter,
-                      pageController: _pageController,
-                      offset: position,
-                    );
-                  },
-                  controller: _pageController,
-                  itemCount: 5,
-                ),
-              ),
-              Container(
-                transform: Matrix4.translationValues(0, -30, 0),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white24,
-                  child: Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              // RotatedBox(
-              //   quarterTurns: 1,
-              //   child: Container(
-              //     height: 250,
-              //     width: MediaQuery.of(context).size.width,
-              //     child: ListWheelScrollView(
-              //       itemExtent: 70,
-              //       offAxisFraction: _fraction,
-              //       physics: BouncingScrollPhysics(),
-              //       children: List.generate(5, (_) {
-              //         return PrayerTime(
-              //           scale: 1,
-              //           activated: true,
-              //           title: "Ashr",
-              //           time: "11:31",
-              //           opacity: 1,
-              //           alignment: Alignment.bottomCenter,
-              //         );
-              //       }),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -160,15 +313,15 @@ class _HomePageState extends State<HomePage> {
 
 class PrayerTime extends StatefulWidget {
   const PrayerTime({
-    Key key,
-    @required this.scale,
-    @required this.title,
-    @required this.time,
-    @required this.activated,
-    @required this.opacity,
-    @required this.alignment,
-    @required this.pageController,
-    @required this.offset,
+    Key? key,
+    required this.scale,
+    required this.title,
+    required this.time,
+    required this.activated,
+    required this.opacity,
+    required this.alignment,
+    required this.pageController,
+    required this.offset,
   }) : super(key: key);
 
   final double scale;
@@ -203,10 +356,10 @@ class _PrayerTimeState extends State<PrayerTime> {
               color: Colors.white,
               size: 18,
             ),
-            FlatButton(
+            TextButton(
               onPressed: () {
                 if (widget.offset != widget.pageController.page) {
-                  if (widget.offset < widget.pageController.page) {
+                  if (widget.offset < widget.pageController.page!) {
                     widget.pageController.previousPage(
                         duration: Duration(milliseconds: 100),
                         curve: Curves.easeInOutQuad);
@@ -217,8 +370,6 @@ class _PrayerTimeState extends State<PrayerTime> {
                   }
                 }
               },
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
               child: Column(
                 children: [
                   Text(

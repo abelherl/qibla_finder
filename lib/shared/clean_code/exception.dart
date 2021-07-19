@@ -4,15 +4,15 @@ import 'package:flutter/foundation.dart';
 /// Throw this if you want to get server exception
 class ServerException extends Equatable implements Exception {
   /// code from server
-  final int code;
+  final Object code;
 
   /// message from server
-  final String message;
+  final Object message;
 
   /// data from server
-  final String data;
+  final Object data;
 
-  ServerException({@required this.code, @required this.message, this.data});
+  ServerException({required this.code, required this.message, required this.data});
 
   @override
   List<Object> get props => [code, message, data];

@@ -8,62 +8,62 @@ ThemeData mainTheme() {
 
   TextTheme _basicTextTheme(TextTheme base) {
     return base.copyWith(
-      headline1: base.headline1.copyWith(
+      headline1: base.headline1!.copyWith(
         fontFamily: fontFamily,
         fontWeight: FontWeight.w700,
         color: Colors.white,
       ),
-      headline2: base.headline2.copyWith(
+      headline2: base.headline2!.copyWith(
         fontFamily: fontFamily,
         fontWeight: FontWeight.w700,
         color: Colors.white,
       ),
-      headline3: base.headline3.copyWith(
+      headline3: base.headline3!.copyWith(
         fontFamily: fontFamily,
         fontWeight: FontWeight.w700,
         color: Colors.white,
       ),
-      headline4: base.headline4.copyWith(
+      headline4: base.headline4!.copyWith(
         fontFamily: fontFamily,
         fontWeight: FontWeight.w700,
         fontSize: 30,
         color: Colors.white,
       ),
-      headline5: base.headline5.copyWith(
+      headline5: base.headline5!.copyWith(
         fontFamily: fontFamily,
         fontWeight: FontWeight.w700,
         color: Colors.white,
       ),
-      headline6: base.headline6.copyWith(
+      headline6: base.headline6!.copyWith(
         fontFamily: fontFamily,
         fontWeight: FontWeight.w600,
-        fontSize: 20,
+        fontSize: 18,
         color: Colors.white,
       ),
-      bodyText1: base.bodyText1.copyWith(
+      bodyText1: base.bodyText1!.copyWith(
         fontFamily: fontFamily,
         color: Colors.white,
       ),
-      bodyText2: base.bodyText2.copyWith(
+      bodyText2: base.bodyText2!.copyWith(
         fontFamily: fontFamily,
         color: Colors.white,
       ),
-      subtitle1: base.subtitle1.copyWith(
+      subtitle1: base.subtitle1!.copyWith(
+        fontFamily: fontFamily,
+        fontWeight: FontWeight.w500,
+        color: Colors.white,
+      ),
+      subtitle2: base.subtitle2!.copyWith(
+        fontFamily: fontFamily,
+        fontWeight: FontWeight.w500,
+        color: Colors.white,
+      ),
+      button: base.subtitle2!.copyWith(
         fontFamily: fontFamily,
         fontWeight: FontWeight.w700,
         color: Colors.white,
       ),
-      subtitle2: base.subtitle2.copyWith(
-        fontFamily: fontFamily,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-      ),
-      button: base.subtitle2.copyWith(
-        fontFamily: fontFamily,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-      ),
-      caption: base.caption.copyWith(
+      caption: base.caption!.copyWith(
         fontFamily: fontFamily,
         color: aLightTextColor,
       ),

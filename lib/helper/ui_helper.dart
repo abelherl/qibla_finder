@@ -21,7 +21,7 @@ void showLoading(BuildContext context) {
 
 // Show snackbar
 void showInSnackBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldKey, String value) {
-  scaffoldKey.currentState.showSnackBar(
+  scaffoldKey.currentState!.showSnackBar(
     SnackBar(
       content: Text(value),
       backgroundColor: Theme.of(context).primaryColor,
@@ -67,14 +67,13 @@ Future<bool> showNoNetworkDialog(BuildContext context, String message) async {
                     ),
                   ),
                   SizedBox(height: aPadding),
-                  FlatButton(
-                    color: Colors.transparent,
+                  TextButton(
                     onPressed: () {
                       Navigator.pop(context, {'reload': true});
                     },
                     child: Text(
                       "AppLocalizations.of(context).translate('offline_reload')",
-                      style: Theme.of(context).textTheme.subtitle2.copyWith(
+                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
                         color: Theme.of(context).primaryColor,
                       ),
                     ),

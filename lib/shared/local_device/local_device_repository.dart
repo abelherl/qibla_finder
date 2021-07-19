@@ -39,7 +39,7 @@ class LocalDeviceSimpleRepository extends LocalDeviceRepository {
 
     // check existing device key
     if (sp.containsKey(key)) {
-      identifier = sp.getString(key);
+      identifier = sp.getString(key)!;
       logger.fine('Local device id found $identifier');
     } else {
       identifier = Uuid().v4();

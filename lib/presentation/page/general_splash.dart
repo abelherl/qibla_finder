@@ -16,10 +16,12 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 2500), () {
+    Future.delayed(Duration(milliseconds: 2000), () {
       App.main.router.navigate(
         RouteName.generalHome,
         transitionDuration: Duration(milliseconds: 800),
+        transitionCurve: Curves.easeOutQuart,
+        navigationType: NavigationType.pushReplace,
       );
     });
   }
@@ -42,19 +44,17 @@ class _SplashPageState extends State<SplashPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 10),
               SvgPicture.asset(
                 'assets/icons/SVG/qibla_finder_logo.svg',
                 color: Colors.white,
-                height: 150,
+                height: 80,
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 10),
               Text(
                 'Qibla Finder',
-                style: Theme.of(context).textTheme.headline5.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w300,
-                    ),
-              )
+                style: Theme.of(context).textTheme.headline6,
+              ),
             ],
           ),
         ),
