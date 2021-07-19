@@ -4,12 +4,12 @@
 
 A qibla finder app made with Flutter.
 
-Features:
+###### Features:
 - Qibla finder using user's location
 - Prayer times based on user's location
 - Prayer time notification
 - Multiple prayer time calculation methods
 
-Available in:
+###### Available in:
 - English
 - Bahasa Indonesia
