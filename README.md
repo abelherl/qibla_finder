@@ -1,16 +1,15 @@
-# qibla_finder
+![Qibla Finder](https://user-images.githubusercontent.com/42707275/126158071-2f655e4f-3ed6-48f7-a24d-4ff2da5fa2f2.png)
 
-A new Flutter application.
+# Qibla Finder
 
-## Getting Started
+A qibla finder app made with Flutter.
 
-This project is a starting point for a Flutter application.
+Features:
+- Qibla finder using user's location
+- Prayer times based on user's location
+- Prayer time notification
+- Multiple prayer time calculation methods
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Available in:
+- English
+- Bahasa Indonesia
